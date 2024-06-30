@@ -16,9 +16,10 @@ A powerful and intuitive stock market trading application for the Dhaka Stock Ex
 ## 🛠️ Technologies Used
 
 <p align="center">
+  <img src="https://raw.githubusercontent.com/TomSchimansky/CustomTkinter/master/documentation_images/CustomTkinter_logo_light.png" alt="CustomTkinter" width="500" />
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="150" />
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="150" />
-  <img src="https://raw.githubusercontent.com/TomSchimansky/CustomTkinter/master/documentation_images/CustomTkinter_logo_light.png" alt="CustomTkinter" width="500" />
+
 </p>
 
 
