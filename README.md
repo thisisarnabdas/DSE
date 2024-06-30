@@ -17,8 +17,8 @@ A powerful and intuitive stock market trading application for the Dhaka Stock Ex
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="200" />
-  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL" width="200" />
-    <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="Figma" width="200" />
+  <img src="https://mariadb.com/wp-content/uploads/2019/11/mariadb-logo-vert_blue-transparent.svg" alt="MariaDB" width="50" height="200"/>
+  <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="Figma" width="200" />
   <img src="https://raw.githubusercontent.com/TomSchimansky/CustomTkinter/master/documentation_images/CustomTkinter_logo_light.png" alt="CustomTkinter" width="500" />
 
 </p>
