@@ -27,11 +27,11 @@ A powerful and intuitive stock market trading application for the Dhaka Stock Ex
 ## 📦 Installation
 
 1. Clone the repository:
-   `git clone https://github.com/thisisarnabdas/CSE370.git`
+   ```git clone https://github.com/thisisarnabdas/CSE370.git```
 2. Install dependencies:
-   `pip install -r requirements.txt`
+   ```pip install -r requirements.txt```
 3. Run the application:
-   `python main.py`
+   ```python main.py```
 
 ## 🤝 Contributing
 
