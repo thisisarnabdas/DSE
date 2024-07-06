@@ -1,11 +1,12 @@
 # 📈 Dhaka Stock Exchange Trading App
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Tkinter](https://img.shields.io/badge/Tkinter-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![CustomTkinter](https://img.shields.io/badge/CustomTkinter-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
-![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Tkinter](https://img.shields.io/badge/Tkinter-included-blue?style=for-the-badge&logo=python)](https://docs.python.org/3/library/tkinter.html)
+[![CustomTkinter](https://img.shields.io/badge/CustomTkinter-latest-blue?style=for-the-badge&logo=python)](https://github.com/TomSchimansky/CustomTkinter)
+[![Figma](https://img.shields.io/badge/Figma-Design-F24E1E?style=for-the-badge&logo=figma)](https://www.figma.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-3.30%2B-blue?style=for-the-badge&logo=sqlite)](https://www.sqlite.org/)
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
 A powerful and intuitive stock market trading application for the Dhaka Stock Exchange, built with Python and modern GUI frameworks.
 
