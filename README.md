@@ -50,7 +50,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 Arnab Das - arnab.das@g.bracu.ac.bd
 
-Project Link: https://github.com/thisisarnabdas/CSE447
+Project Link: https://github.com/thisisarnabdas/CSE370
 
 ---
 <p align="center">
