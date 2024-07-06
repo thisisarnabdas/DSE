@@ -33,3 +33,25 @@ A powerful and intuitive stock market trading application for the Dhaka Stock Ex
    `pip install -r requirements.txt`
 3. Run the application:
    `python main.py`
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+<p align="center">
+<img src="https://www.gnu.org/graphics/gplv3-with-text-136x68.png" alt="GPL v3 Logo"/>
+</p>
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+Arnab Das - arnab.das@g.bracu.ac.bd
+Project Link: https://github.com/thisisarnabdas/CSE447
+
+---
+<p align="center">
+  Made with ❤️ by ARNAB
+</p>
