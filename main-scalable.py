@@ -20,16 +20,19 @@ $$\   $$ |  $$ |$$\ $$  __$$ |$$ |       $$ |$$\ $$ |$$ |  $$ |$$ |  $$ |      $
 """)
 
 app = CTk()
-app.geometry("500x400")
+app.geometry("800x600")  # Set an initial size
+app.minsize(500, 400)  # Set a minimum size
 set_appearance_mode("dark")
 set_default_color_theme("dark-blue")
 app.title("Dhaka Stock Exchange")
+app.grid_rowconfigure(0, weight=1)
+app.grid_columnconfigure(1, weight=1)
+
 frame = CTkFrame(master=app)
 img_label = CTkLabel(master=app)
 wallet_frame = CTkFrame(master=app)
 port = CTkFrame(master=app)
 stock_frame = CTkFrame(master=app)
-
 
 def connect_to_database():
     try:
@@ -39,16 +42,12 @@ def connect_to_database():
         print(f"Failed to connect to the database: {str(e)}")
         sys.exit()
 
-
 connection = connect_to_database()
 cursor = connection.cursor()
-
-
 def get_wallet_balance(user_id):
     cursor.execute("SELECT balance FROM wallets WHERE user_id = ?", (user_id,))
     result = cursor.fetchone()
     return decimal.Decimal(result[0]) if result else None
-
 
 def update_wallet_balance(user_id, new_balance):
     sql = "UPDATE wallets SET balance = ? WHERE user_id = ?"
@@ -68,7 +67,6 @@ def refresh_balance(userid):
         display = str(balance)
 
     amt.configure(text=display)
-
 
 def add_money_to_wallet(user_id, amount):
     current_balance = get_wallet_balance(user_id)
@@ -124,7 +122,6 @@ def get_stock_price(company_id):
     result = cursor.fetchone()
     return result[0] if result else 0.0
 
-
 def add_shares_to_portfolio(user_id, company_id, shares):
     sql = "INSERT INTO shares (user_id, company_id, shares_owned) VALUES (?, ?, ?)"
     cursor.execute(sql, (user_id, company_id, shares))
@@ -136,6 +133,7 @@ def get_user_shares(user_id, company_id):
     cursor.execute(sql, (user_id, company_id))
     result = cursor.fetchone()
     return result[0] if result else 0
+
 
 
 def buy_shares(user_id, company):
@@ -219,6 +217,7 @@ def sell_shares(user_id, company):
 
 
 def out():
+
     global wallet_frame
     global port
     global stock_frame
@@ -252,13 +251,11 @@ def view(user_id, company):
     price = get_stock_price(ids[company])
     price_label = CTkLabel(master=top, text=f"৳ {price}", font=("Roboto", 16))
     price_label.pack()
-    buy_button = CTkButton(master=top, text="Buy", width=120, height=40, fg_color="#40e0d0", hover_color="#32cd32",
-                           font=("Roboto", 24),
+    buy_button = CTkButton(master=top, text="Buy", width=120, height=40, fg_color="#40e0d0", hover_color="#32cd32", font=("Roboto", 24),
                            command=lambda: buy_shares(user_id, company))
     buy_button.place(x=20, y=250)
 
-    sell_button = CTkButton(master=top, text="Sell", width=120, height=40, fg_color="#40e0d0", hover_color="#e2062c",
-                            font=("Roboto", 24),
+    sell_button = CTkButton(master=top, text="Sell", width=120, height=40, fg_color="#40e0d0", hover_color="#e2062c", font=("Roboto", 24),
                             command=lambda: sell_shares(user_id, company))
     sell_button.place(x=160, y=250)
 
@@ -268,11 +265,13 @@ def logged_in(userid):
     frame.destroy()
     img_label.destroy()
     balance = get_wallet_balance(userid)
-    wallet_frame = CTkFrame(master=app, width=220, height=50)
-    wallet_frame.grid(row=0, column=0, padx=10, pady=10)
+
+    wallet_frame = CTkFrame(master=app)
+    wallet_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    wallet_frame.grid_columnconfigure(0, weight=1)
 
     bal = CTkLabel(master=wallet_frame, text="Balance: ৳", font=("Roboto", 15))
-    bal.place(x=20, y=10)
+    bal.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
     if balance >= 1000000:
         display = str(round(balance / 1000000, 2)) + " M"
@@ -282,29 +281,48 @@ def logged_in(userid):
         display = str(balance)
 
     amt = CTkLabel(master=wallet_frame, text=display, font=("Roboto", 15))
-    amt.place(x=90, y=10)
-    btn = CTkButton(master=wallet_frame, text="Add +", fg_color="#40e0d0", hover_color="#00ff00", width=60, height=20,
-                    command=lambda: add(userid))
-    btn.place(x=150, y=13)
+    amt.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
-    port = CTkFrame(master=app, width=220, height=320)
-    port.grid(row=1, column=0, padx=10, pady=(0, 10))
+    btn = CTkButton(master=wallet_frame, text="Add +", fg_color="#40e0d0", hover_color="#cc00ff", width=60, height=20,
+                    command=lambda: add(userid))
+    btn.grid(row=0, column=2, padx=5, pady=5, sticky="e")
+
+    port = CTkFrame(master=app)
+    port.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
+    port.grid_columnconfigure(0, weight=1)
+    port.grid_rowconfigure(1, weight=1)
+
     txt = CTkLabel(master=port, text="Portfolio", font=("Roboto", 24))
-    txt.place(x=60, y=5)
+    txt.grid(row=0, column=0, padx=5, pady=5)
+
+    shares_frame = CTkFrame(master=port)
+    shares_frame.grid(row=1, column=0, sticky="nsew")
+    shares_frame.grid_columnconfigure(0, weight=1)
+
     shares_data = check_shares(userid)
     for i, share in enumerate(shares_data):
         suitcase = CTkImage(dark_image=Image.open("./images/bagw.png"), light_image=Image.open("./images/bagb.png"),
                             size=(20, 15))
-        bag = CTkLabel(master=port, text="", image=suitcase)
-        bag.place(x=8, y=58 + 40 * i)
-        stock_label = CTkLabel(master=port, text=f"{share} : {shares_data[share]} shares", font=("Roboto", 16))
-        stock_label.place(x=30, y=60 + 40 * i)
+        bag = CTkLabel(master=shares_frame, text="", image=suitcase)
+        bag.grid(row=i, column=0, padx=5, pady=5, sticky="w")
+        stock_label = CTkLabel(master=shares_frame, text=f"{share} : {shares_data[share]} shares", font=("Roboto", 16))
+        stock_label.grid(row=i, column=1, padx=5, pady=5, sticky="w")
 
-    stock_frame = CTkFrame(master=app, width=250, height=380)
-    stock_frame.grid(row=0, column=1, rowspan=2)
+    lg = CTkImage(Image.open("./images/logout.png"), size=(20, 22))
+    logout = CTkButton(master=port, text="Logout", fg_color="#40e0d0", hover_color="#e2062c", command=out, image=lg)
+    logout.grid(row=2, column=0, padx=5, pady=5)
+
+    stock_frame = CTkFrame(master=app)
+    stock_frame.grid(row=0, column=1, rowspan=2, padx=10, pady=10, sticky="nsew")
+    stock_frame.grid_columnconfigure(0, weight=1)
+    stock_frame.grid_rowconfigure(1, weight=1)
 
     stock_heading = CTkLabel(master=stock_frame, text="Watchlist", font=("Roboto", 24))
-    stock_heading.place(x=80, y=5)
+    stock_heading.grid(row=0, column=0, padx=5, pady=5)
+
+    stocks_frame = CTkFrame(master=stock_frame)
+    stocks_frame.grid(row=1, column=0, sticky="nsew")
+    stocks_frame.grid_columnconfigure(0, weight=1)
 
     portfolio_stocks = [
         {"name": "WALTON", "identifier": "WALTON"},
@@ -316,20 +334,21 @@ def logged_in(userid):
 
     for i, stock_data in enumerate(portfolio_stocks):
         stock_name = stock_data["name"]
-        stock_label = CTkLabel(master=stock_frame, text=stock_name, font=("Roboto", 16))
-        stock_label.place(x=80, y=60 + 60 * i)
+        stock_label = CTkLabel(master=stocks_frame, text=stock_name, font=("Roboto", 16))
+        stock_label.grid(row=i * 2, column=0, padx=5, pady=5, sticky="w")
 
         eye = CTkImage(Image.open("./images/eye.png"), size=(17, 10))
-        viw_btn = CTkButton(master=stock_frame, text="View", width=80, height=20, fg_color="#40e0d0",
+        viw_btn = CTkButton(master=stocks_frame, text="View", width=80, height=20, fg_color="#40e0d0",
                             hover_color="#cc00ff", image=eye,
                             command=lambda stock=stock_data["identifier"]: view(userid, stock))
-        viw_btn.place(x=90, y=95 + 60 * i)
+        viw_btn.grid(row=i * 2 + 1, column=0, padx=5, pady=5)
     lg = CTkImage(Image.open("./images/logout.png"), size=(20, 22))
     logout = CTkButton(master=port, text="Logout", fg_color="#40e0d0", hover_color="#e2062c", command=out, image=lg)
     logout.place(x=40, y=280)
 
 
 def check(user, nid, phone, pass1, pass2, balance):
+
     if user != "" and nid != "" and phone != "" and pass1 != "" and balance != "":
         # Validate nid number (12 digits)
         if not re.match(r'^\d{12}$', nid):
@@ -378,6 +397,7 @@ def login_check(phone_number, password):
 
 
 def backfnc():
+
     global frame
     global img_label
     frame.destroy()
@@ -385,73 +405,73 @@ def backfnc():
     page1()
 
 
-def login(): #Suchi
+def login():
     global frame
     global img_label
     frame.destroy()
-    frame = CTkFrame(master=app, width=200, height=400)
-    frame.grid(row=0, column=1)
+    frame = CTkFrame(master=app)
+    frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+    frame.grid_rowconfigure(5, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
 
     img_logo = CTkImage(Image.open("./images/logo.png"), size=(100, 100))
     logo = CTkLabel(master=frame, image=img_logo, text="")
-    logo.place(x=50, y=10)
-    # Phone Number Entry
+    logo.grid(row=0, column=0, pady=(20, 40))
+
     phone_entry = CTkEntry(master=frame, placeholder_text="Phone Number")
-    phone_entry.place(x=30, y=150)
+    phone_entry.grid(row=1, column=0, pady=10, padx=20, sticky="ew")
 
     password_entry = CTkEntry(master=frame, placeholder_text="Password", show="*")
-    password_entry.place(x=30, y=190)
+    password_entry.grid(row=2, column=0, pady=10, padx=20, sticky="ew")
 
     login_button = CTkButton(master=frame, text="Login", fg_color="#40e0d0", hover_color="#32cd32",
                              command=lambda: login_check(phone_entry.get(), password_entry.get()))
-    login_button.place(x=30, y=230)
+    login_button.grid(row=3, column=0, pady=10, padx=20, sticky="ew")
 
     back = CTkButton(master=frame, text="Back", fg_color="#40e0d0",
                      command=backfnc, hover_color="#ff4500")
-    back.place(x=30, y=270)
+    back.grid(row=4, column=0, pady=10, padx=20, sticky="ew")
 
 
-def signup(): #Zarin
+def signup():
     global frame
     frame.destroy()
-    frame = CTkFrame(master=app, width=200, height=400)
-    frame.grid(row=0, column=1)
+    frame = CTkFrame(master=app)
+    frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+    frame.grid_rowconfigure(8, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
 
     img_logo = CTkImage(Image.open("./images/logo.png"), size=(70, 70))
     logo = CTkLabel(master=frame, image=img_logo, text="")
-    logo.place(x=65, y=1)
+    logo.grid(row=0, column=0, pady=(10, 20))
 
-    # UserName
     username = CTkEntry(master=frame, placeholder_text="Full Name")
-    username.place(x=30, y=80)
+    username.grid(row=1, column=0, pady=5, padx=20, sticky="ew")
 
-    # nid Number Entry
     nid_entry = CTkEntry(master=frame, placeholder_text="NID Number")
-    nid_entry.place(x=30, y=120)
+    nid_entry.grid(row=2, column=0, pady=5, padx=20, sticky="ew")
 
-    # Phone Number Entry
     phone_entry = CTkEntry(master=frame, placeholder_text="Phone Number")
-    phone_entry.place(x=30, y=160)
+    phone_entry.grid(row=3, column=0, pady=5, padx=20, sticky="ew")
 
-    # Password Entry
     password_entry = CTkEntry(master=frame, placeholder_text="Password", show="*")
-    password_entry.place(x=30, y=200)
+    password_entry.grid(row=4, column=0, pady=5, padx=20, sticky="ew")
 
-    # Password Confirmation Entry
     password_confirm_entry = CTkEntry(master=frame, placeholder_text="Confirm Password", show="*")
-    password_confirm_entry.place(x=30, y=240)
+    password_confirm_entry.grid(row=5, column=0, pady=5, padx=20, sticky="ew")
 
-    # Balance
     balance = CTkEntry(master=frame, placeholder_text="Balance")
-    balance.place(x=30, y=280)
+    balance.grid(row=6, column=0, pady=5, padx=20, sticky="ew")
 
     sign_btn = CTkButton(master=frame, text="Sign-Up", fg_color="#40e0d0", hover_color="#32cd32",
                          command=lambda: check(username.get(), nid_entry.get(), phone_entry.get(),
                                                password_confirm_entry.get(), password_entry.get(), balance.get()))
-    sign_btn.place(x=30, y=320)
+    sign_btn.grid(row=7, column=0, pady=5, padx=20, sticky="ew")
+
     bck = CTkButton(master=frame, text="Back", fg_color="#40e0d0",
                     command=backfnc, hover_color="#ff4500")
-    bck.place(x=30, y=355)
+    bck.grid(row=8, column=0, pady=5, padx=20, sticky="ew")
+
 
 
 def close():
@@ -463,7 +483,7 @@ def change_theme():
     set_appearance_mode("light") if app._get_appearance_mode() == "dark" else set_appearance_mode("dark")
 
 
-def page1(): #Afnan
+def page1():
     global frame
     global img_label
     frame.destroy()
@@ -471,34 +491,40 @@ def page1(): #Afnan
     wallet_frame.destroy()
     port.destroy()
     stock_frame.destroy()
-    img = CTkImage(Image.open("./images/login.jpg"), size=(300, 400))
-    img_label = CTkLabel(master=app, image=img, text="")
-    img_label.grid(row=0, column=0)
 
-    frame = CTkFrame(master=app, width=200, height=400)
-    frame.grid(row=0, column=1)
+    app.grid_columnconfigure(0, weight=1)
+    app.grid_columnconfigure(1, weight=1)
+
+    img = CTkImage(Image.open("./images/login.jpg"), size=(400, 600))
+    img_label = CTkLabel(master=app, image=img, text="")
+    img_label.grid(row=0, column=0, sticky="nsew")
+
+    frame = CTkFrame(master=app)
+    frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+    frame.grid_rowconfigure(5, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
 
     img_logo = CTkImage(Image.open("./images/logo.png"), size=(100, 100))
     logo = CTkLabel(master=frame, image=img_logo, text="")
-    logo.place(x=50, y=30)
+    logo.grid(row=0, column=0, pady=(30, 50))
 
     l_img = CTkImage(Image.open("./images/loginImg.png"), size=(21, 21))
-    login_button = CTkButton(master=frame, text=" Login    ", fg_color="#40e0d0", hover_color="#009698", command=login,
-                             image=l_img)
-    login_button.place(x=30, y=170)
+    login_button = CTkButton(master=frame, text=" Login    ", fg_color="#40e0d0", hover_color="#009698", command=login, image=l_img)
+    login_button.grid(row=1, column=0, pady=10, padx=20, sticky="ew")
+
     s_img = CTkImage(Image.open("./images/signup.png"), size=(25, 21))
-    sign_btn = CTkButton(master=frame, text="Sign-Up", fg_color="#40e0d0", hover_color="#009698", command=signup,
-                         image=s_img)
-    sign_btn.place(x=30, y=210)
+    sign_btn = CTkButton(master=frame, text="Sign-Up", fg_color="#40e0d0", hover_color="#009698",command=signup, image=s_img)
+    sign_btn.grid(row=2, column=0, pady=10, padx=20, sticky="ew")
 
     close_btn = CTkButton(master=frame, text="Close App", command=close, fg_color="#32cd32", hover_color="#e2062c")
-    close_btn.place(x=30, y=260)
+    close_btn.grid(row=3, column=0, pady=10, padx=20, sticky="ew")
 
     t = CTkImage(dark_image=Image.open("./images/dark.png"), light_image=Image.open("./images/light.png"),
                  size=(70, 30))
     theme = CTkButton(master=frame, text="", image=t, fg_color="transparent", hover=False, width=66, height=34,
                       command=change_theme)
-    theme.place(x=60, y=300)
+    theme.grid(row=4, column=0, pady=10)
+
 
 
 page1()
