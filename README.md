@@ -31,7 +31,7 @@ A powerful and intuitive stock market trading application for the Dhaka Stock Ex
 1. Clone the repository:
    
    ```
-   git clone https://github.com/thisisarnabdas/CSE370.git
+   git clone https://github.com/thisisarnabdas/DSE.git
    ```
 3. Install dependencies:
    
